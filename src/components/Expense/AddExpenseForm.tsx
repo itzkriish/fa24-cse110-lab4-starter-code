@@ -1,13 +1,28 @@
 import React, { useState } from "react";
+import { useContext } from "react";
+import { AppContext } from "../../context/AppContext";
+import { Expense } from "../../types/types";
+
 const AddExpenseForm = () => {
   // Exercise: Consume the AppContext here
-
+  const { expenses, setExpenses } = useContext(AppContext);
   // Exercise: Create name and cost to state variables
+  const [name, setName] = useState("");
+  const [cost, setCost] = useState<number | "">("");
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     // Exercise: Add add new expense to expenses context array
+    if (name && cost) {
+      const newExpense: Expense = {
+        id: Date.now().toString(),
+        name,
+        cost: Number(cost),
+      };
+      setExpenses([...expenses, newExpense]);
+      setName("");
+      setCost("");
+    }
   };
 
   return (
@@ -20,19 +35,21 @@ const AddExpenseForm = () => {
             type="text"
             className="form-control"
             id="name"
-            value={""}
+            value={name}
             // HINT: onChange={}
+            onChange={(e) => setName(e.target.value)}
           ></input>
         </div>
         <div className="col-sm">
           <label htmlFor="cost">Cost</label>
           <input
             required
-            type="text"
+            type="number"
             className="form-control"
             id="cost"
-            value={0}
+            value={cost}
             // HINT: onChange={}
+            onChange={(e) => setCost(Number(e.target.value))}
           ></input>
         </div>
         <div className="col-sm">
