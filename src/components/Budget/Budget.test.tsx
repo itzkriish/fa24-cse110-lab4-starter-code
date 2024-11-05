@@ -13,7 +13,7 @@ test("verifies budget balance", () => {
      <ExpenseTotal />
      <Remaining />
    </AppProvider>
- );
+ )
 
  fireEvent.change(screen.getByLabelText(/Name/), { target: { value: "Test 1" } });
  fireEvent.change(screen.getByLabelText(/Cost/), { target: { value: "100" } });
