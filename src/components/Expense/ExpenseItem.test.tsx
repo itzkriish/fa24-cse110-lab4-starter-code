@@ -19,7 +19,7 @@ test("deletes an expense", () => {
  fireEvent.change(screen.getByLabelText(/Cost/), { target: { value: "100" } });
  fireEvent.click(screen.getByText(/Save/));
  expect(screen.getByText("Test")).toBeInTheDocument();
- expect(screen.getByText("$0")).toBeInTheDocument();
+ expect(screen.getByText("$100")).toBeInTheDocument();
  expect(screen.getByText(/Spent so far:/)).toHaveTextContent("Spent so far: $100");
  expect(screen.getByText(/Remaining:/)).toHaveTextContent("Remaining: $900");
 
