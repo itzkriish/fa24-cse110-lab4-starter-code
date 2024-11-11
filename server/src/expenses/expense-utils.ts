@@ -1,4 +1,3 @@
-import { exec } from "child_process";
 import { Expense } from "../types";
 import { Request, Response } from "express";
 import { Database } from "sqlite";
@@ -23,19 +22,35 @@ export async function createExpenseServer(req: Request, res: Response, db: Datab
  
  }
 
-export function deleteExpense(req: Request, res: Response, expenses: Expense[]) {
-    // TO DO: Implement deleteExpense function
-    const id = req.params.id;
-    const index = expenses.findIndex((expense) => expense.id === id);
+export async function deleteExpense(req: Request, res: Response, db: Database) {
+    const { id } = req.params;
 
-    if (index !== -1) {
-        expenses.splice(index, 1);
-        res.status(200).json( { message: "Expense deleted" });
-    } else {
-        res.status(404).json( { message: "Expense not found"});
-    }
+    try {
+
+        if (!id) {
+            return res.status(400).send({ error: "Missing required fields" });
+        }
+
+        const result = await db.run('DELETE FROM expenses WHERE id = ?', [id]);
+        res.status(201).send( { message: "Expense deleted" });
+
+    } catch (error) {
+
+        return res.status(400).send({ error: `Expense could not be deleted, + ${error}` });
+
+    };
 }
 
-export function getExpenses(req: Request, res: Response, expenses: Expense[]) {
-    res.status(200).send({ "data": expenses });
+export async function getExpenses(req: Request, res: Response, db: Database) {
+
+    try {
+
+        const expenses = await db.all('SELECT * FROM expenses;');
+        res.status(201).send({"data":expenses});
+
+    } catch (error) {
+
+        return res.status(400).send({ error: `Expense could not be fetched, + ${error}` });
+
+    };
 }
